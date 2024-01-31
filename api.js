@@ -1,0 +1,40 @@
+const express = require("express")
+const app = express()
+const PORT = process.env.PORT || 3000
+const axios = require("axios")
+
+app.use(express.json())
+
+//Read
+app.get("/products", async (req, res)=>{
+    try{
+        let response = await axios.get("https://dotnet-api-database-connection.azurewebsites.net/allProducts")
+
+        res.send(response.data)
+    }catch(error){
+        console.log(error)
+        res.status(500).send("Error occurred: " + error.message)
+    }
+})
+
+//Create
+app.post("/product", async (req, res)=>{
+    try{
+        let response = await axios.post("http://localhost:7062/product",{
+            Name: req.body.Name,
+            Price: req.body.Price
+        })
+
+    res.status(201).send(response.daat + " was added.")
+    }catch(error){
+        res.status(500).send("Error occurred while creating product")
+    }
+
+})
+
+
+
+
+app.listen(PORT, ()=>{
+    console.log("Listening to port" + PORT)
+})
