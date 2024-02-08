@@ -1,45 +1,49 @@
-document.getElementById('apiGetBtn').addEventListener('click', async function(){
-    try{
-        let response = await fetch("http://localhost:3000/products")
-        let data = await response.json()
-        console.log(data)
-    }catch (error){
-        console.log('Error:', error)
+document.getElementById('fetchProductsBtn').addEventListener('click', async function() {
+    try {
+        const response = await fetch('http://localhost:3000/products');
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const data = await response.json();
+
+        const dataStr = JSON.stringify(data, null, 2);
+        
+        let productArray = JSON.parse(dataStr)
+        
+        document.getElementById('productData').textContent = dataStr;
+    } catch (error) {
+        console.error('There was a problem with your fetch operation:', error);
+        document.getElementById('productData').textContent = 'Failed to load products: ' + error.message;
     }
+});
 
-    document.getElementById('test').textContent = respons.Name
-})
+async function sendPostRequest(url, name, price) {
+    try {
+        const data = { name, price };
 
-ducument.getElementById('apiPostBtn').addEventListener('click', async function(){
-    //Text element = name
-    //Text element = Price
-
-    createProduct()
-})
-
-async function createProduct(name, price){
-    try{
-        let response = await fetch("http://localhost:3000/products", {
-            method:'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        let jsonData = JSON.stringify(data)
+        console.log(jsonData)
+        await fetch(url,{
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
             },
-            body: JSON.stringify({
-                Name:name,
-                Price:price
-            })
+            body: jsonData
         })
-        let data = await response.json();
-        console.log(data)
-    }catch(error){
-        console.log('Error:', error)
+        .catch(console.log)
+
+
+    } catch (error) {
+        console.error( error);
+        document.getElementById('productData').textContent = 'Failed to send POST request: ' + error.message;
     }
 }
 
 
+document.getElementById('sendPostBtn').addEventListener('click', async function() {
+    const name = document.getElementById('nameInput').value
+    const price = document.getElementById('priceInput').value
+    const url = 'http://localhost:3000/product';
+    await sendPostRequest(url, name, price);
+});
 
-
-
-app.listen(PORT, ()=>{
-    console.log("Listening to port" + PORT)
-})

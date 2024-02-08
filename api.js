@@ -1,9 +1,12 @@
 const express = require("express")
+const axios = require("axios")
+const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 3000
-const axios = require("axios")
 
 app.use(express.json())
+app.use(cors())
+
 
 //Read
 app.get("/products", async (req, res)=>{
@@ -20,12 +23,16 @@ app.get("/products", async (req, res)=>{
 //Create
 app.post("/product", async (req, res)=>{
     try{
-        let response = await axios.post("http://localhost:7062/product",{
+        req.body
+        let response = await axios.post("https://localhost:7062//product",{
             Name: req.body.Name,
             Price: req.body.Price
         })
+        
+        response.json();
 
-    res.status(201).send(response.daat + " was added.")
+
+    res.status(201).send(response.data + " was added.")
     }catch(error){
         res.status(500).send("Error occurred while creating product")
     }
