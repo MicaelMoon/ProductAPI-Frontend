@@ -23,13 +23,12 @@ app.get("/products", async (req, res)=>{
 //Create
 app.post("/product", async (req, res)=>{
     try{
-        req.body
-        let response = await axios.post("https://localhost:7062//product",{
-            Name: req.body.Name,
-            Price: req.body.Price
-        })
-        
-        response.json();
+        let data = {
+            Name:req.body.Name,
+            Price:req.body.Price
+        }
+
+        let response = await axios.post("https://dotnet-api-database-connection.azurewebsites.net/product",data)
 
 
     res.status(201).send(response.data + " was added.")
